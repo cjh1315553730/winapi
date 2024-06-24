@@ -256,17 +256,17 @@ static int lua_peek(lua_State *L)
 
 static int lua_ShellExecute(lua_State *L)
 {
-    HWND hwnd = (HWND)lua_touserdata(L, 1); // 第一个参数：窗口句柄
-    const char *operation = luaL_optstring(L, 2, NULL); // 第二个参数：操作
-    const char *file = luaL_checkstring(L, 3); // 第三个参数：文件
-    const char *parameters = luaL_optstring(L, 4, NULL); // 第四个参数：参数
-    const char *directory = luaL_optstring(L, 5, NULL); // 第五个参数：目录
-    int showCmd = luaL_optinteger(L, 6, SW_SHOWNORMAL); // 第六个参数：显示命令
+    // HWND hwnd = (HWND)lua_touserdata(L, 1); // 第一个参数：窗口句柄
+    // const char *operation = luaL_optstring(L, 2, NULL); // 第二个参数：操作
+    // const char *file = luaL_checkstring(L, 3); // 第三个参数：文件
+    // const char *parameters = luaL_optstring(L, 4, NULL); // 第四个参数：参数
+    // const char *directory = luaL_optstring(L, 5, NULL); // 第五个参数：目录
+    // int showCmd = luaL_optinteger(L, 6, SW_SHOWNORMAL); // 第六个参数：显示命令
 
-    HINSTANCE result = ShellExecute(hwnd, operation, file, parameters, directory, showCmd);
+    // HINSTANCE result = ShellExecute(hwnd, operation, file, parameters, directory, showCmd);
 
-    // 将结果转换为 int 并推入 Lua 堆栈
-    lua_pushinteger(L, (int)result);
+    // // 将结果转换为 int 并推入 Lua 堆栈
+    // lua_pushinteger(L, (int)result);
 
     // 返回一个值
     return 1;
@@ -1088,41 +1088,41 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
-HWND CreateMainWindow(const wchar_t *className, const wchar_t *windowTitle, int width, int height)
-{
-    WNDCLASS wc = {0};
-    wc.lpfnWndProc = WindowProc; // 设置窗口过程
-    wc.hInstance = GetModuleHandle(NULL);
-    wc.lpszClassName = className; // 类名
-    RegisterClass(&wc);
-    return CreateWindow(
-        className, windowTitle,
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, width, height,
-        NULL, NULL, GetModuleHandle(NULL), NULL
-    );
-}
+// HWND CreateMainWindow(const wchar_t *className, const wchar_t *windowTitle, int width, int height)
+// {
+//     WNDCLASS wc = {0};
+//     wc.lpfnWndProc = WindowProc; // 设置窗口过程
+//     wc.hInstance = GetModuleHandle(NULL);
+//     wc.lpszClassName = className; // 类名
+//     RegisterClass(&wc);
+//     return CreateWindow(
+//         className, windowTitle,
+//         WS_OVERLAPPEDWINDOW,
+//         CW_USEDEFAULT, CW_USEDEFAULT, width, height,
+//         NULL, NULL, GetModuleHandle(NULL), NULL
+//     );
+// }
 
 static int l_CreateMainWindow(lua_State *L)
 {
-    const wchar_t *className = NULL;
-    const wchar_t *windowTitle = NULL;
-    int width = 0;
-    int height = 0;
+    // const wchar_t *className = NULL;
+    // const wchar_t *windowTitle = NULL;
+    // int width = 0;
+    // int height = 0;
 
-    if (lua_gettop(L) < 4 || !lua_isstring(L, 1) || !lua_isstring(L, 2) || !lua_isinteger(L, 3) || !lua_isinteger(L, 4)) {
-        lua_pushnil(L);
-        lua_pushstring(L, "Invalid arguments");
-        return 2;
-    }
+    // if (lua_gettop(L) < 4 || !lua_isstring(L, 1) || !lua_isstring(L, 2) || !lua_isinteger(L, 3) || !lua_isinteger(L, 4)) {
+    //     lua_pushnil(L);
+    //     lua_pushstring(L, "Invalid arguments");
+    //     return 2;
+    // }
 
-    className = (const wchar_t *)lua_tostring(L, 1);
-    windowTitle = (const wchar_t *)lua_tostring(L, 2);
-    width = lua_tointeger(L, 3);
-    height = lua_tointeger(L, 4);
+    // className = (const wchar_t *)lua_tostring(L, 1);
+    // windowTitle = (const wchar_t *)lua_tostring(L, 2);
+    // width = lua_tointeger(L, 3);
+    // height = lua_tointeger(L, 4);
 
-    HWND hwnd = CreateMainWindow(className, windowTitle, width, height);
-    lua_pushlightuserdata(L, hwnd);
+    // HWND hwnd = CreateMainWindow(className, windowTitle, width, height);
+    // lua_pushlightuserdata(L, hwnd);
     return 1;
 }
 
