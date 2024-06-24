@@ -4,3 +4,4 @@
 *.exp
 *.lib
 *.obj
+.vscode
