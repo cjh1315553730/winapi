@@ -5,6 +5,7 @@
 #include <psapi.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <lua.h>
 #include <lauxlib.h>
@@ -1146,6 +1147,97 @@ static int l_UpdateWindow(lua_State *L)
     return 1;
 }
 
+
+static void print_lua_stack(lua_State *L) {
+    char* header_flag = "\n---------------------------------------------";
+    lua_getglobal(L, "print");
+    lua_pushstring(L, header_flag);
+    lua_call(L, 1, 0);
+
+    lua_getglobal(L, "print");
+    lua_pushstring(L, "行号");
+    lua_pushstring(L, "索引");
+    lua_pushstring(L, "索引2");
+    lua_pushstring(L, "类型");
+    lua_pushstring(L, "值");
+    lua_call(L, 5, 0);
+
+    int len = lua_gettop(L);
+    int row = 1;
+    for (int i = len; i > 0; i--)
+    {
+        const char* type = luaL_typename(L, i);
+        lua_getglobal(L, "print");
+        lua_pushnumber(L, row);
+        lua_pushnumber(L, i);
+        lua_pushnumber(L, -i);
+        lua_pushstring(L, type);
+        lua_pushvalue(L, i);
+        lua_call(L, 5, 0);
+        row++;
+    }
+
+    char* footer_flag = "---------------------------------------------\n";
+    lua_getglobal(L, "print");
+    lua_pushstring(L, footer_flag);
+    lua_call(L, 1, 0);
+}
+
+static int lua_test(lua_State *L)
+{
+    // luaL_error(L, "123");
+
+    printf("获取参数列表");
+    print_lua_stack(L);
+
+    lua_pushnil(L);
+    int a = lua_next(L, 1);
+    printf("%d", a);
+    print_lua_stack(L);
+    lua_pop(L, 1);
+    print_lua_stack(L);
+
+    int b = lua_next(L, 1);
+    printf("%d", b);
+    print_lua_stack(L);
+    lua_pop(L, 1);
+
+    int c = lua_next(L, 1);
+    printf("%d", c);
+    print_lua_stack(L);
+
+
+    print_lua_stack(L);
+
+
+    lua_pushnumber(L, 1);
+    lua_pushnumber(L, 2);
+
+    return 2;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 注册模块函数
 static const struct luaL_Reg winapi[] = {
 
@@ -1210,6 +1302,10 @@ static const struct luaL_Reg winapi[] = {
     {"ShowWindow", l_ShowWindow},
     {"UpdateWindow", l_UpdateWindow},
 
+
+
+    {"Test", lua_test},
+
     {NULL, NULL} // 数组结束标志
 };
 
@@ -1217,21 +1313,21 @@ LUA_winapi int luaopen_winapi(lua_State *L)
 {
     luaL_newlib(L, winapi);
 
-    lua_newtable(L);
-    lua_pushvalue(L, -2);
-    lua_pushnil(L);
-    while (lua_next(L, -2) != 0) {
-        if (lua_isstring(L, -2)) {
-            lua_pushvalue(L, -2);
-            lua_pushvalue(L, -2);
-            lua_settable(L, -6);
-        }
-        lua_pop(L, 1);
-    }
-    lua_pop(L, 1);
+    // lua_newtable(L);
+    // lua_pushvalue(L, -2);
+    // lua_pushnil(L);
+    // while (lua_next(L, -2) != 0) {
+    //     if (lua_isstring(L, -2)) {
+    //         lua_pushvalue(L, -2);
+    //         lua_pushvalue(L, -2);
+    //         lua_settable(L, -6);
+    //     }
+    //     lua_pop(L, 1);
+    // }
+    // lua_pop(L, 1);
 
-    lua_pushcclosure(L, lua_ListAPIFunctions, 1);
-    lua_setfield(L, -2, "ListAPIFunctions");
+    // lua_pushcclosure(L, lua_ListAPIFunctions, 1);
+    // lua_setfield(L, -2, "ListAPIFunctions");
 
     return 1;
 }

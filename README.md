@@ -42,3 +42,6 @@ print("INI 文件中的整数值: " .. int_value)
 -- 写入INI文件中的整数
 
 winapi.WritePrivateProfileInt(section, int_key, 30, file)
+
+
+make clean && make && lua .\example\cb.lua
